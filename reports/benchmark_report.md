@@ -1,7 +1,4 @@
 
-```markdown
-# 📊 Benchmark Report — Multi-Agent Research System
-
 ## 👤 Author
 2A202600218_Nguyễn Tiến Đạt  
 Course: AI Systems / Multi-Agent Lab  
