@@ -1,0 +1,288 @@
+Asus@LAPTOP-C4FHF919 MINGW64 /c/LabVinUni/2A202600218_NguyenTienDat-phase2-day5-main/2A202600218_NguyenTienDat-phase2-day5-main
+$ python -m multi_agent_research_lab.cli baseline -q "Explain GraphRAG"
+
+[LLM INIT]
+Model: openai/gpt-oss-120b:free
+Base URL: https://openrouter.ai/api/v1
+API Key loaded: YES
+
+🚀 Running Single-Agent Baseline...
+
+2026-05-06 11:59:02,962 INFO httpx - HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+
+[LLM CALL]
+Model: openai/gpt-oss-120b:free
+Latency: 35.54s
+Input tokens: 92
+Output tokens: 831
+Estimated cost: $0.000512
+╭────────────────────────── Single-Agent Answer ───────────────────────────╮
+│ **GraphRAG (Graph‑augmented Retrieval‑Augmented Generation)**            │
+│                                                                          │
+│ - **What it is:** A hybrid AI architecture that combines                 │
+│ *retrieval‑augmented generation* (RAG) with a *knowledge graph* to       │
+│ improve the quality, factuality, and reasoning ability of LLM‑generated  │
+│ answers.                                                                 │
+│                                                                          │
+│ - **Core components**                                                    │
+│   1. **Document store / vector retriever** – stores raw text (e.g., web  │
+│ pages, PDFs) and returns the most relevant passages for a query using    │
+│ dense embeddings.                                                        │
+│   2. **Knowledge graph** – a structured representation (nodes = entities │
+│ or concepts, edges = relations) built from the same source corpus (or    │
+│ from external KG sources). Nodes may also carry textual attributes.      │
+│   3. **Graph encoder / index** – enables fast retrieval of graph         │
+│ sub‑structures (neighbourhoods, paths) that are relevant to the query.   │
+│ Often implemented with graph‑aware vector embeddings (e.g., GraphSAGE,   │
+│ RGCN) or with symbolic graph traversal.                                  │
+│   4. **Fusion module** – merges the retrieved text passages and the      │
+│ graph context (sub‑graph, path, or node embeddings) into a single prompt │
+│ for the LLM.                                                             │
+│   5. **LLM (generator)** – produces the final answer, now conditioned on │
+│ both unstructured evidence and explicit relational knowledge.            │
+│                                                                          │
+│ - **How it works (simplified pipeline)**                                 │
+│   1. **Query → Dual retrieval**                                          │
+│      - *Textual retrieval*: The query is embedded and the top‑k passages │
+│ are fetched from the vector store.                                       │
+│      - *Graph retrieval*: The same query (or its entity mentions) is     │
+│ used to locate relevant nodes/edges in the graph (e.g., via entity       │
+│ linking + graph traversal).                                              │
+│   2. **Context construction**                                            │
+│      - The selected passages are concatenated.                           │
+│      - The retrieved sub‑graph is serialized (e.g., as a list of         │
+│ triples) or encoded into embeddings.                                     │
+│      - Both are formatted into a prompt template (often “Context →       │
+│ Question → Answer”) and fed to the LLM.                                  │
+│   3. **Generation**                                                      │
+│      - The LLM generates an answer that can directly cite passages and   │
+│ explicitly reason over the graph relations (e.g., “Because *X* is a      │
+│ subsidiary of *Y*, …”).                                                  │
+│   4. **Optional post‑processing** – verification, citation extraction,   │
+│ or answer refinement.                                                    │
+│                                                                          │
+│ - **Why add a graph?**                                                   │
+│   - **Explicit relational reasoning:** Graph edges give the model a      │
+│ clear, symbolic view of how entities are connected, which is hard to     │
+│ infer from raw text alone.                                               │
+│   - **Improved factual grounding:** Structured facts can be cited        │
+│ directly, reducing hallucination.                                        │
+│   - **Efficient long‑range inference:** A graph can surface indirect     │
+│ connections (multi‑hop paths) without needing to retrieve many long      │
+│ passages.                                                                │
+│   - **Explainability:** The retrieved sub‑graph can be shown to users as │
+│ the “reasoning trace”.                                                   │
+│                                                                          │
+│ - **Typical use cases**                                                  │
+│   - Enterprise Q&A over internal documents + knowledge bases.            │
+│   - Biomedical literature search where drug–disease–gene relationships   │
+│ matter.                                                                  │
+│   - Customer‑support bots that need to navigate product taxonomy and     │
+│ policy rules.                                                            │
+│   - Academic research assistants that combine papers (text) with         │
+│ citation networks (graph).                                               │
+│                                                                          │
+│ - **Key references**                                                     │
+│   - *Liu et al., “GraphRAG: Retrieval‑Augmented Generation with          │
+│ Knowledge Graphs”, 2023‑2024* (introduces the architecture and benchmark │
+│ results).                                                                │
+│   - Related works: **RAG** (Lewis et al., 2020), **K‑RAG**, **KGS‑RAG**, │
+│ and **Hybrid Retrieval** models.                                         │
+│                                                                          │
+│ In short, GraphRAG enriches the classic RAG pattern by injecting a       │
+│ knowledge‑graph layer, allowing large language models to retrieve and    │
+│ reason over both unstructured text and structured relational data, which │
+│ leads to more accurate, traceable, and logically coherent answers.       │
+╰──────────────────────────────────────────────────────────────────────────╯
+      Baseline Metrics      
+┏━━━━━━━━━━━━━━━┳━━━━━━━━━━┓
+┃ Metric        ┃ Value    ┃
+┡━━━━━━━━━━━━━━━╇━━━━━━━━━━┩
+│ Latency (s)   │ 35.54    │
+│ Input Tokens  │ 92       │
+│ Output Tokens │ 831      │
+│ Cost (USD)    │ 0.000512 │
+└───────────────┴──────────┘
+(.venv) 
+Asus@LAPTOP-C4FHF919 MINGW64 /c/LabVinUni/2A202600218_NguyenTienDat-phase2-day5-main/2A202600218_NguyenTienDat-phase2-day5-main
+$ python -m multi_agent_research_lab.cli multi-agent -q "Explain GraphRAG"
+[SearchClient] Provider: mock
+
+[LLM INIT]
+Model: openai/gpt-oss-120b:free
+Base URL: https://openrouter.ai/api/v1
+API Key loaded: YES
+
+[LLM INIT]
+Model: openai/gpt-oss-120b:free
+Base URL: https://openrouter.ai/api/v1
+API Key loaded: YES
+
+[LLM INIT]
+Model: openai/gpt-oss-120b:free
+Base URL: https://openrouter.ai/api/v1
+API Key loaded: YES
+
+[LLM INIT]
+Model: openai/gpt-oss-120b:free
+Base URL: https://openrouter.ai/api/v1
+API Key loaded: YES
+
+🚀 Starting Multi-Agent Workflow...
+
+
+🚀 Starting Multi-Agent Workflow...
+
+
+[Supervisor] Next step: researcher
+[Search] Using MOCK data
+2026-05-06 11:59:56,636 INFO httpx - HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+
+[LLM CALL]
+Model: openai/gpt-oss-120b:free
+Latency: 22.59s
+Input tokens: 259
+Output tokens: 529
+Estimated cost: $0.000356
+
+[ResearcherAgent DONE]
+
+[Supervisor] Next step: analyst
+2026-05-06 12:00:18,231 INFO httpx - HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+
+[LLM CALL]
+Model: openai/gpt-oss-120b:free
+Latency: 39.61s
+Input tokens: 704
+Output tokens: 1025
+Estimated cost: $0.000721
+
+[AnalystAgent DONE]
+
+[Supervisor] Next step: writer
+2026-05-06 12:00:57,726 INFO httpx - HTTP Request: POST https://openrouter.ai/api/v1/chat/completions "HTTP/1.1 200 OK"
+
+[LLM CALL]
+Model: openai/gpt-oss-120b:free
+Latency: 36.15s
+Input tokens: 1733
+Output tokens: 843
+Estimated cost: $0.000766
+
+[WriterAgent DONE]
+
+[Supervisor] Next step: done
+
+✅ Workflow finished
+
+
+📊 ROUTE HISTORY:
+researcher → analyst → writer → done
+
+🧠 TRACE:
+- Supervisor: route → researcher
+- ResearcherAgent: done
+- Supervisor: route → analyst
+- AnalystAgent: analysis completed
+- Supervisor: route → writer
+- WriterAgent: final answer generated
+- Supervisor: route → done
+╭─────────────────────────── Multi-Agent Answer ───────────────────────────╮
+│ ## Final Answer                                                          │
+│                                                                          │
+│ **GraphRAG** (Graph‑augmented Retrieval‑Augmented Generation) is an      │
+│ extension of the classic RAG pipeline that inserts a **graph‑based       │
+│ reasoning layer** between retrieval and generation.                      │
+│                                                                          │
+│ 1. **Standard RAG recap** – In a traditional RAG system the retriever    │
+│ returns the *k* most relevant passages, these passages are simply        │
+│ concatenated, and the language model generates an answer from that flat  │
+│ text block (Source 2). No information about how the passages relate to   │
+│ each other is kept.                                                      │
+│                                                                          │
+│ 2. **What GraphRAG adds** – After retrieval, the returned passages are   │
+│ turned into a **graph**:                                                 │
+│    * **Nodes** = individual documents, passages, or even entities        │
+│ extracted from the text.                                                 │
+│    * **Edges** = semantic or relational links, built from similarity     │
+│ scores, entity‑linking, or pre‑existing knowledge‑graph relationships    │
+│ (Source 1).                                                              │
+│                                                                          │
+│    The graph captures the *structure* of the evidence set, allowing the  │
+│ system to see which pieces of information are connected.                 │
+│                                                                          │
+│ 3. **Graph‑based reasoning** – A graph neural network (GNN), a traversal │
+│ algorithm, or a combination of both processes the graph to produce a     │
+│ **reasoning trace** – a sequence of nodes and edges that together answer │
+│ the query. This trace is then fed to the generator as an enriched        │
+│ context (Source 1). Because the model can follow multi‑hop paths, it can │
+│ combine evidence that is scattered across several documents, performing  │
+│ a chain‑of‑thought style inference that vanilla RAG cannot (Source 3).   │
+│                                                                          │
+│ 4. **Reuse and efficiency** – The graph can be built **on‑the‑fly** for  │
+│ each query, but it can also be cached when the same topic appears        │
+│ repeatedly, saving the cost of rebuilding the structure (Source 1).      │
+│                                                                          │
+│ 5. **Benefits**                                                          │
+│    * **Deeper reasoning** – multi‑hop traversal lets the model           │
+│ synthesize information from multiple sources.                            │
+│    * **Higher factual consistency** – the model can cross‑check facts    │
+│ across linked nodes, reducing hallucinations (Source 3).                 │
+│    * **Interpretability** – the reasoning trace can be displayed to      │
+│ users, showing which nodes/edges contributed to the answer.              │
+│    * **Hybrid capability** – it blends retrieval‑based QA with           │
+│ knowledge‑graph reasoning, offering a middle ground between pure text    │
+│ retrieval and hand‑crafted knowledge graphs.                             │
+│                                                                          │
+│ 6. **Trade‑offs**                                                        │
+│    * **Computational overhead** – constructing and traversing a graph    │
+│ adds latency compared with plain RAG, though the increase is usually     │
+│ modest (Source 3).                                                       │
+│    * **Scalability** – the graph size must be managed (e.g., pruning     │
+│ low‑relevance edges) to keep inference fast.                             │
+│    * **Quality dependence** – the usefulness of the graph hinges on the  │
+│ accuracy of similarity measures, entity linking, or external KG edges;   │
+│ noisy graphs can hurt performance.                                       │
+│                                                                          │
+│ In summary, GraphRAG retains the modular                                 │
+│ retrieval‑augmentation‑generation workflow of RAG but enriches the       │
+│ “augmentation” step with a structured graph that enables multi‑hop       │
+│ reasoning, better factual grounding, and clearer explanations of how an  │
+│ answer was derived (Source 1, 3).                                        │
+│                                                                          │
+│ ---                                                                      │
+│                                                                          │
+│ ## Key Takeaways                                                         │
+│ - GraphRAG turns retrieved passages into a **graph** (nodes = texts,     │
+│ edges = semantic/relational links).                                      │
+│ - A **graph reasoning step** (GNN or traversal) produces a reasoning     │
+│ trace that is fed to the generator, enabling multi‑hop synthesis.        │
+│ - Compared with traditional RAG, GraphRAG yields **higher answer         │
+│ accuracy and factual consistency** on tasks requiring evidence           │
+│ integration (Source 3).                                                  │
+│ - The approach improves **interpretability** by exposing which nodes and │
+│ edges contributed to the final answer.                                   │
+│ - **Efficiency considerations**: graph construction adds modest cost;    │
+│ pruning and caching are needed for low‑latency deployments.              │
+│ - Effectiveness depends on the **quality of the underlying links**       │
+│ (similarity scores, entity linking, or KG edges).                        │
+╰──────────────────────────────────────────────────────────────────────────╯
+╭────────── Execution Trace ──────────╮
+│ Supervisor: route → researcher      │
+│ ResearcherAgent: done               │
+│ Supervisor: route → analyst         │
+│ AnalystAgent: analysis completed    │
+│ Supervisor: route → writer          │
+│ WriterAgent: final answer generated │
+│ Supervisor: route → done            │
+╰─────────────────────────────────────╯
+╭─────────── Route History ────────────╮
+│ researcher → analyst → writer → done │
+╰──────────────────────────────────────╯
+  Multi-Agent Metrics  
+┏━━━━━━━━━━━━━┳━━━━━━━┓
+┃ Metric      ┃ Value ┃
+┡━━━━━━━━━━━━━╇━━━━━━━┩
+│ Latency (s) │ 98.36 │
+└─────────────┴───────┘
+(.venv)
